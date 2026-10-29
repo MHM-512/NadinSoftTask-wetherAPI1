@@ -1,0 +1,93 @@
+{
+  "app": {
+    "title": "Weather Dashboard",
+    "logoAlt": "Weather dashboard logo"
+  },
+  "login": {
+    "title": "Login",
+    "nameLabel": "Enter your name",
+    "submit": "Login",
+    "nameRequired": "Please enter your name.",
+    "illustrationAlt": "Decorative weather illustration",
+    "language": "Language",
+    "languageEn": "English",
+    "languageFa" : "persian",
+    "welcome": "Check the weather anywhere, in a clean and simple dashboard."
+
+  },
+  "nav": {
+    "searchLocation": "Search your location",
+    "settings": "Settings",
+    "logout": "Logout",
+    "greeting": "Hello, {{name}}",
+    "country1": "Tehran",
+    "country2" : "London" ,
+    "country3" : "San Francisco"
+  },
+  "settings": {
+    "mode": "Mode",
+    "light": "Light",
+    "dark": "Dark",
+    "language": "Language",
+    "english": "En",
+    "persian": "Fa",
+    "logout": "Logout"
+  },
+  "weather": {
+    "current": "Current weather",
+    "feelsLike": "Feels like {{value}}",
+    "humidity": "Humidity",
+    "wind": "Wind speed",
+    "pressure": "Pressure",
+    "visibility": "Visibility",
+    "clouds": "Cloudiness",
+    "highLow": "High: {{high}}  Low: {{low}}",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "forecastTitle": "5-day forecast",
+    "forecastHint": "Built from OpenWeather’s free 5-day / 3-hour forecast. Daily min and max are calculated from those 3-hour readings.",
+    "chartTitle": "5-day temperature trend (°C)",
+    "chartEmpty": "Temperature chart data is not available for this location.",
+    "tempUnit": "°C",
+    "humidityValue": "{{value}}%",
+    "windValue": "{{value}} m/s",
+    "pressureValue": "{{value}} hPa",
+    "visibilityValue": "{{value}} km",
+    "pop": "Precipitation chance",
+    "noCitySelected": "Search for a city to see the weather.",
+    "min": "Min",
+    "max": "Max"
+  },
+  "search": {
+    "placeholder": "Search city",
+    "noResults": "No matching city was found.",
+    "minChars": "Type at least 2 characters to search.",
+    "loading": "Searching cities…"
+  },
+  "states": {
+    "loading": "Loading weather data…",
+    "retry": "Try again",
+    "empty": "Nothing to display yet."
+  },
+  "errors": {
+    "missingApiKey": "OpenWeather API key is not configured. Add VITE_OPENWEATHER_API_KEY to a .env file and restart the app.",
+    "invalidApiKey": "The API key is invalid or not activated yet.",
+    "notFound": "Weather data for this location was not found.",
+    "rateLimit": "Too many requests were sent. Please wait a moment and try again.",
+    "timeout": "The request timed out. Check your connection and try again.",
+    "network": "Network error. Check your internet connection.",
+    "generic": "Weather data could not be loaded."
+  },
+  "footer": {
+    "rights": "All rights of this site are reserved for Nadin Sadr Aria Engineering Company.",
+    "contact": "Contact us: {{email}}"
+  },
+  "a11y": {
+    "closeSettings": "Close settings",
+    "weatherIcon": "Weather condition icon"
+  },
+  "chart": {
+    "temperature": "Temperature",
+    "time": "Time"
+  }
+}
