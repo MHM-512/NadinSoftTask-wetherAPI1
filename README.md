@@ -172,6 +172,15 @@ This project was developed to practice and demonstrate:
 - Improve automated testing.
 - Add secure authentication through a backend service.
 - Add historical weather data when supported by the API plan.
+---
+### Environment Variables
+Before running the project, you need to create a .env file in the root directory of the project.
+1. Create a .env file
+Create a file named .env next to package.json and add the following environment variable:
+VITE_OPENWEATHER_API_KEY=your_openweather_api_key
+2. Get your API key
+Sign up or log in to OpenWeather and obtain your API key.
+Replace your_openweather_api_key with your actual API key.
 
 ---
 
