@@ -6,14 +6,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
+
 import {
   CssBaseline,
   ThemeProvider,
 } from "@mui/material";
+
+import { useTranslation } from "react-i18next";
+
 import {
   createAppTheme,
   type ThemeMode,
 } from "./theme";
+
+import RtlDemo from "./CacheProvider ";
 
 interface ThemeModeContextType {
   mode: ThemeMode;
@@ -42,15 +48,19 @@ interface ThemeModeProviderProps {
 export default function ThemeModeProvider({
   children,
 }: ThemeModeProviderProps) {
+
+  const { i18n } = useTranslation();
+
+  const direction = i18n.dir();
+
   const [mode, setMode] = useState<ThemeMode>(() => {
     const savedMode = localStorage.getItem("themeMode");
-
     return savedMode === "light" ? "light" : "dark";
   });
 
   const theme = useMemo(
-    () => createAppTheme(mode),
-    [mode]
+    () => createAppTheme(mode, direction),
+    [mode, direction]
   );
 
   function handleSetMode(nextMode: ThemeMode) {
@@ -59,13 +69,15 @@ export default function ThemeModeProvider({
   }
 
   return (
-    <ThemeModeContext.Provider
-      value={{ mode, setMode: handleSetMode }}
-    >
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {children}
-      </ThemeProvider>
-    </ThemeModeContext.Provider>
+    <RtlDemo direction={direction}>
+      <ThemeModeContext.Provider
+        value={{ mode, setMode: handleSetMode }}
+      >
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </ThemeProvider>
+      </ThemeModeContext.Provider>
+    </RtlDemo>
   );
 }

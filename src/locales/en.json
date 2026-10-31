@@ -16,6 +16,7 @@
 
   },
   "nav": {
+    "WetherDashabord" : "Wether dashabord",
     "searchLocation": "Search your location",
     "settings": "Settings",
     "logout": "Logout",

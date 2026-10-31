@@ -10,8 +10,9 @@ ReactDOM.createRoot(
   document.getElementById("root")!
 ).render(
   <React.StrictMode>
+   
     <ThemeModeProvider>
-      <AuthProvider>
+      <AuthProvider> 
         <App />
       </AuthProvider>
     </ThemeModeProvider>

@@ -5,7 +5,8 @@ import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined
 import { useTranslation } from "react-i18next";
 
 export function Footer() {
-  const { t, i18n } = useTranslation();
+   const { t , i18n } = useTranslation(); 
+  const isRtl = i18n.language === "fa";
 
   const locale = i18n.language.startsWith("fa")
     ? "fa-IR"
@@ -22,6 +23,7 @@ export function Footer() {
 
   return (
     <Box
+    //  dir={isRtl ? "rtl" : "ltr"}
       component="footer"
       sx={{
         mt: "auto",

@@ -39,7 +39,6 @@ export default function Login() {
       <Box
         sx={{
           height: "100vh",
-          width: "100%",
           bgcolor: "background.default",
           display: "flex",
           flexDirection: "column",
@@ -110,7 +109,7 @@ export default function Login() {
 
               <Button type="submit" variant="contained" disabled={isSubmitting}>
                 {t("login.submit")}
-              </Button>
+              </Button> 
             </Box>
 
             <Box
@@ -131,10 +130,10 @@ export default function Login() {
                 src="/img/dc5674da7415fc93ad3656c3d4ca4a2379e80c63.png"
                 alt="image1"
                 sx={{
+                  width: "35vh",
                   position: "absolute",
                   top: 1,
                   right: 0,
-                  width: 250,
                 }}
               />
 
@@ -143,8 +142,8 @@ export default function Login() {
                 src="/img/06509ff97ca4966e34e878881cc49db475d84799.png"
                 alt="image2"
                 sx={{
+                  width: "35vh",
                   position: "absolute",
-                  width: 250,
                   left: 0,
                 }}
               />
@@ -154,10 +153,10 @@ export default function Login() {
                 src="/img/52e7a10c792d6dd947742b32d669accc2f1a969a.png"
                 alt="image3"
                 sx={{
+                  width: "35vh",
                   position: "absolute",
                   right: 0,
                   bottom: 0,
-                  width: 250,
                 }}
               />
             </Box>

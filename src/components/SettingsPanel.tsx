@@ -22,17 +22,19 @@ interface SettingsPanelProps {
 
 export function SettingsPanel({ anchorEl, open, onClose }: SettingsPanelProps) {
   const { t, i18n } = useTranslation();
+  const isRtl = i18n.language === "fa";
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   const { mode, setMode } = useThemeMode();
 
   function handleLogout() {
-  logout();
-  void navigate({ to: "/login" });
-}
+    logout();
+    void navigate({ to: "/login" });
+  }
   return (
     <Popover
+      dir={isRtl ? "rtl" : "ltr"}
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
@@ -50,21 +52,25 @@ export function SettingsPanel({ anchorEl, open, onClose }: SettingsPanelProps) {
         },
       }}
     >
+
       <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 700 }}>
         {t("settings.mode")}
       </Typography>
-      <ButtonGroup fullWidth variant="outlined" size="small">
+      <ButtonGroup fullWidth variant="text" size="medium" sx={{borderRadius: 0 }}>
         <Button
           onClick={() => setMode("light")}
-            variant={mode === "light" ? "contained" : "outlined"}
-          startIcon={<WbSunnyOutlinedIcon fontSize="small" />}
+          variant={mode === "light" ? "contained" : "outlined"}
+          startIcon={<WbSunnyOutlinedIcon  />}
+          sx={{borderRadius: 0,}}
         >
           {t("settings.light")}
         </Button>
         <Button
           onClick={() => setMode("dark")}
-            variant={mode === "dark" ? "contained" : "outlined"}
-          startIcon={<NightlightOutlinedIcon fontSize="small" />}
+          variant={mode === "dark" ? "contained" : "outlined"}
+          startIcon={<NightlightOutlinedIcon />}
+          sx={{borderRadius: 0,}}
+
         >
           {t("settings.dark")}
         </Button>
@@ -75,16 +81,20 @@ export function SettingsPanel({ anchorEl, open, onClose }: SettingsPanelProps) {
       <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 700 }}>
         {t("settings.language")}
       </Typography>
-      <ButtonGroup fullWidth variant="outlined" size="small">
+      <ButtonGroup fullWidth variant="text" size="medium">
         <Button
           onClick={() => void i18n.changeLanguage("en")}
           variant={i18n.language === "en" ? "contained" : "outlined"}
+          sx={{borderRadius: 0,}}
+
         >
           {t("settings.english")}
         </Button>
         <Button
           onClick={() => void i18n.changeLanguage("fa")}
           variant={i18n.language.startsWith("fa") ? "contained" : "outlined"}
+          sx={{borderRadius: 0,}}
+
         >
           {t("settings.persian")}
         </Button>
@@ -95,7 +105,7 @@ export function SettingsPanel({ anchorEl, open, onClose }: SettingsPanelProps) {
       <Box>
         <Button
           color="inherit"
-            onClick={handleLogout}
+          onClick={handleLogout}
           startIcon={<LogoutOutlinedIcon />}
           sx={{ px: 0 }}
         >

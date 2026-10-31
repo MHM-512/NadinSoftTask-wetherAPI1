@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import type { ForecastResponse } from "../services/weatherApi";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +8,7 @@ interface ForecastDayProps {
 export default function ForecastDay({ forecast }: ForecastDayProps) {
 
   const { t , i18n } = useTranslation(); 
+ 
 
   const dailyForecast = forecast
     ? Object.values(
@@ -29,6 +29,7 @@ export default function ForecastDay({ forecast }: ForecastDayProps) {
 
   return (
     <Box
+  
       sx={{
         mx: "auto",
         width: "100%",
@@ -104,8 +105,8 @@ export default function ForecastDay({ forecast }: ForecastDayProps) {
                 sx={{ width: 56 }}
               />
 
-              <Typography fontWeight={600}>
-                {Math.round(item.main.temp)}°C
+              <Typography sx={{fontWeight: 600}}>
+                {Math.round(item.main.temp) }°C
               </Typography>
             </Box>
           ))}

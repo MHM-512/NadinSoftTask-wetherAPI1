@@ -31,10 +31,9 @@ const temperatureData = [
   { month: "Dec", temperature: 25 },
 ];
 
+
 export default function TemperatureChart() {
   const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
-
   return (
     <Paper
       elevation={0}

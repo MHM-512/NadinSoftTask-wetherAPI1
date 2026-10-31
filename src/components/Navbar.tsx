@@ -20,7 +20,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ selectedCity, onCitySelect }: NavbarProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -28,6 +28,7 @@ export default function Navbar({ selectedCity, onCitySelect }: NavbarProps) {
 
   return (
     <AppBar
+    
       position="sticky"
       color="inherit"
       elevation={2}
@@ -47,18 +48,24 @@ export default function Navbar({ selectedCity, onCitySelect }: NavbarProps) {
           sx={{ width: "50px", borderRadius: "50px" }}
         />
         <Box sx={{ flexGrow: 1, minWidth: 140 }}>
-          <Typography variant="subtitle1" fontWeight={700}>
-            {t("Wether dashabord")}
+          <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+            {t("nav.WetherDashabord")}
           </Typography>
-          
+
         </Box>
         <TextField
           select
-          label={t("Search Your Location")}
+          label={t("nav.searchLocation")}
+         
           value={selectedCity?.name ?? ""}
           variant="standard"
-          sx={{ m: 1, width: "25ch" }}
+          sx={{
+            m: 1,
+            width: "25ch",
+           
+          }}
           onChange={(event) => {
+
             const countries: GeoLocation[] = [
               {
                 name: "Tehran",
@@ -89,9 +96,22 @@ export default function Navbar({ selectedCity, onCitySelect }: NavbarProps) {
             }
           }}
         >
-          <MenuItem value="Tehran">{t("nav.country1")}</MenuItem>
-          <MenuItem value="London">{t("nav.country2")}</MenuItem>
-          <MenuItem value="San Francisco">{t("nav.country3")}</MenuItem>
+          <MenuItem
+            value="Tehran"
+          
+          >
+            {t("nav.country1")}
+          </MenuItem>
+          <MenuItem
+            value="London"
+      
+          >{t("nav.country2")}
+          </MenuItem>
+          <MenuItem
+            value="San Francisco"
+        
+          >{t("nav.country3")}
+          </MenuItem>
         </TextField>
 
         <Tooltip title={t("nav.settings")}>

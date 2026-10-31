@@ -52,7 +52,10 @@ export default function DashboardPage({
 
   //Retrieving weather data from an API
   useEffect(() => {
-    if (!selectedCity) {
+    // get value city 
+    const city = selectedCity;
+
+    if (!city) {
       setCurrentWeather(null);
       setForecast(null);
       setError(null);
@@ -61,7 +64,7 @@ export default function DashboardPage({
     }
 
     let cancelled = false;
-
+    // get Weather
     async function loadWeather() {
       setLoading(true);
       setError(null);
@@ -73,17 +76,16 @@ export default function DashboardPage({
 
         const [current, nextForecast] = await Promise.all([
           getCurrentWeather(
-            selectedCity.lat,
-            selectedCity.lon,
+            city!.lat,
+            city!.lon,
             language,
           ),
           getForecast(
-            selectedCity.lat,
-            selectedCity.lon,
+            city!.lat,
+            city!.lon,
             language,
           ),
         ]);
-
         if (!cancelled) {
           setCurrentWeather(current);
           setForecast(nextForecast);
@@ -105,7 +107,7 @@ export default function DashboardPage({
       }
     }
 
-    void loadWeather();
+    loadWeather();
 
     return () => {
       cancelled = true;
@@ -113,10 +115,10 @@ export default function DashboardPage({
   }, [selectedCity, i18n.language]);
 
   // Date and local time of the selected city
-  const dateTime = currentWeather
+  const dateTime: Date | null = currentWeather
     ? new Date(
-        (currentWeather.dt + currentWeather.timezone) * 1000,
-      )
+      (currentWeather.dt + currentWeather.timezone) * 1000,
+    )
     : null;
 
   const locale = i18n.language.startsWith("fa")
@@ -157,7 +159,9 @@ export default function DashboardPage({
 
       {/* Current weather card and chart*/}
       <Box
+      
         sx={{
+
           display: "flex",
           alignItems: "stretch",
           justifyContent: "space-around",
@@ -220,14 +224,16 @@ export default function DashboardPage({
               justifyContent: "space-between",
               gap: 2,
               mt: 1,
+
             }}
           >
-            <Typography variant="h4" fontWeight={600}>
+
+            <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {dateTime
                 ? dateTime.toLocaleDateString(locale, {
-                    weekday: "long",
-                    timeZone: "UTC",
-                  })
+                  weekday: "long",
+                  timeZone: "UTC",
+                })
                 : "--"}
             </Typography>
 
@@ -263,22 +269,22 @@ export default function DashboardPage({
             <Typography variant="body2" color="text.secondary">
               {dateTime
                 ? dateTime.toLocaleDateString(locale, {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                    timeZone: "UTC",
-                  })
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                  timeZone: "UTC",
+                })
                 : "--"}
             </Typography>
 
             <Typography variant="body2" color="text.secondary">
               {dateTime
                 ? dateTime.toLocaleTimeString(locale, {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                    timeZone: "UTC",
-                  })
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                  timeZone: "UTC",
+                })
                 : "--"}
             </Typography>
           </Box>
@@ -293,7 +299,7 @@ export default function DashboardPage({
               mt: 1,
             }}
           >
-            <Typography variant="h4" fontWeight={600}>
+            <Typography variant="h4" sx={{ fontWeight: 600 }}>
               {currentWeather
                 ? `${Math.round(currentWeather.main.temp)}°C`
                 : "--"}
@@ -346,7 +352,7 @@ export default function DashboardPage({
           </Box>
         </Box>
 
-        {/* ---- */}
+        {/* --Add Temperature-Chart-- */}
         <Box
           sx={{
             flex: "1 1 420px",
