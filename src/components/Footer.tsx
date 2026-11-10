@@ -6,8 +6,6 @@ import { useTranslation } from "react-i18next";
 
 export function Footer() {
    const { t , i18n } = useTranslation(); 
-  const isRtl = i18n.language === "fa";
-
   const locale = i18n.language.startsWith("fa")
     ? "fa-IR"
     : "en-US";

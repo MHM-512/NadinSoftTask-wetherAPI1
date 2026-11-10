@@ -3,8 +3,13 @@ import { createTheme } from "@mui/material/styles";
 
 export type ThemeMode = "light" | "dark";
 
-export function createAppTheme(mode: ThemeMode) {
+export function createAppTheme(
+  mode: ThemeMode,
+  direction: "rtl" | "ltr"
+) {
   return createTheme({
+    direction,
+
     palette: {
       mode,
 

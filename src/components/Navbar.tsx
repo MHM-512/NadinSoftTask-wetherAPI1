@@ -20,7 +20,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ selectedCity, onCitySelect }: NavbarProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);

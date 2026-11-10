@@ -1,8 +1,6 @@
 import { RouterProvider } from "@tanstack/react-router";
 import "../locales/config";
 import { router } from "./router";
-import { useTranslation } from "react-i18next";
-import { Box } from "@mui/material";
 
 export default function App() {
 

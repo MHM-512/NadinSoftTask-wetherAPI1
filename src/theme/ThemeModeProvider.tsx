@@ -48,13 +48,13 @@ interface ThemeModeProviderProps {
 export default function ThemeModeProvider({
   children,
 }: ThemeModeProviderProps) {
-
   const { i18n } = useTranslation();
 
-  const direction = i18n.dir();
+  const direction = i18n.dir() as "rtl" | "ltr";
 
   const [mode, setMode] = useState<ThemeMode>(() => {
     const savedMode = localStorage.getItem("themeMode");
+
     return savedMode === "light" ? "light" : "dark";
   });
 

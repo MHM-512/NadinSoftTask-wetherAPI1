@@ -99,7 +99,7 @@ export default function Login() {
                 label={t("login.nameRequired")}
                 variant="outlined"
                 {...register("name", {
-                  required: "Name is required",
+                  required: t("login.nameRequired"),
                   validate: (value) =>
                     value.trim().length > 0 || "Name cannot be empty",
                 })}

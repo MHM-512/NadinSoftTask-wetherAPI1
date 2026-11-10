@@ -1,10 +1,16 @@
+import { useEffect, useState } from "react";
 
 import {
   Box,
   Paper,
   Typography,
+  CircularProgress,
   useTheme,
 } from "@mui/material";
+
+import { useTranslation } from "react-i18next";
+
+import axios from "axios";
 
 import {
   ResponsiveContainer,
@@ -16,31 +22,136 @@ import {
   Tooltip,
 } from "recharts";
 
-const temperatureData = [
-  { month: "Jan", temperature: 16 },
-  { month: "Feb", temperature: 27 },
-  { month: "Mar", temperature: 20 },
-  { month: "Apr", temperature: 23 },
-  { month: "May", temperature: 27 },
-  { month: "Jun", temperature: 22 },
-  { month: "Jul", temperature: 37 },
-  { month: "Aug", temperature: 29 },
-  { month: "Sep", temperature: 39 },
-  { month: "Oct", temperature: 25 },
-  { month: "Nov", temperature: 31 },
-  { month: "Dec", temperature: 25 },
-];
+// Types
+interface TemperatureChartProps {
+  lat: number;
+  lon: number;
+}
 
+interface SeasonalForecastResponse {
+  monthly: {
+    time: string[];
+    temperature_2m_mean: (number | null)[];
+  };
+}
 
-export default function TemperatureChart() {
+interface TemperatureData {
+  date: string;
+  month: string;
+  temperature: number;
+}
+
+export default function TemperatureChart({ lat, lon }: TemperatureChartProps) {
   const theme = useTheme();
+  const { i18n } = useTranslation();
+
+  const isPersian = i18n.language.startsWith("fa");
+
+  const [temperatureData, setTemperatureData] = useState<TemperatureData[]>([]);
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSeasonalForecast() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.get<SeasonalForecastResponse>(
+          "https://seasonal-api.open-meteo.com/v1/seasonal",
+          {
+            params: {
+              latitude: lat,
+              longitude: lon,
+              monthly: "temperature_2m_mean",
+              timezone: "auto",
+            },
+          },
+        );
+
+        if (cancelled) return;
+
+        const monthly = response.data.monthly;
+
+        if (!monthly?.time?.length || !monthly.temperature_2m_mean) {
+          throw new Error("No seasonal data available");
+        }
+
+        const formattedData = monthly.time
+          .map((date, index) => {
+            const temperature = monthly.temperature_2m_mean[index];
+
+            if (temperature === null || temperature === undefined) {
+              return null;
+            }
+
+            const monthName = new Intl.DateTimeFormat(
+              isPersian ? "fa-IR" : "en-US",
+              {
+                month: "short",
+                year: "numeric",
+                timeZone: "UTC",
+              },
+            ).format(new Date(`${date}T00:00:00Z`));
+
+            return {
+              date,
+              month: monthName,
+              temperature: Number(temperature.toFixed(1)),
+            };
+          })
+          .filter((item): item is TemperatureData => item !== null);
+
+        // انتخاب پنج ماه آینده
+        const currentMonth = new Date();
+        currentMonth.setDate(1);
+        currentMonth.setHours(0, 0, 0, 0);
+
+        const nextFiveMonths = formattedData
+          .filter((item) => {
+            const itemDate = new Date(`${item.date}T00:00:00Z`);
+
+            return itemDate >= currentMonth;
+          })
+          .slice(0, 5);
+
+        if (!cancelled) {
+          setTemperatureData(nextFiveMonths);
+        }
+      } catch (err) {
+        console.error("Seasonal forecast error:", err);
+
+        if (!cancelled) {
+          setError(
+            isPersian
+              ? "دریافت اطلاعات پیش‌بینی فصلی ناموفق بود."
+              : "Failed to load seasonal forecast.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadSeasonalForecast();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lat, lon, isPersian]);
+
   return (
     <Paper
       elevation={0}
       sx={{
         width: "100%",
         minWidth: 0,
-        height: 280,
+        height: 300,
         p: { xs: 1.5, sm: 2 },
         borderRadius: "18px",
         bgcolor: "background.paper",
@@ -53,12 +164,17 @@ export default function TemperatureChart() {
         variant="subtitle1"
         sx={{
           fontWeight: 700,
-          fontSize: { xs: 16, sm: 20},
-          color: "text.primary",
-          mb: 1,
+          fontSize: { xs: 16, sm: 20 },
+          mb: 0.5,
         }}
       >
-        Average Monthly Temperature
+        {isPersian ? "پیش‌بینی دمای ماهانه" : "Monthly Temperature Forecast"}
+      </Typography>
+
+      <Typography variant="caption" color="text.secondary">
+        {isPersian
+          ? "برآورد بلندمدت دمای ماه‌های آینده"
+          : "Long-range monthly temperature outlook"}
       </Typography>
 
       <Box
@@ -66,96 +182,141 @@ export default function TemperatureChart() {
           width: "100%",
           height: 220,
           minWidth: 0,
+          mt: 1,
         }}
       >
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={temperatureData}
-            margin={{
-              top: 8,
-              right: 8,
-              left: -9,
-              bottom: 0,
+        {loading ? (
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <defs>
-              <linearGradient
-                id="temperatureLineGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
-                <stop offset="0%" stopColor="#27D3DC" />
-                <stop offset="100%" stopColor="#7957FF" />
-              </linearGradient>
-            </defs>
-
-            <CartesianGrid
-              stroke={theme.palette.divider}
-              strokeDasharray="3 3"
-              vertical={false}
-            />
-
-            <XAxis
-              dataKey="month"
-              axisLine={false}
-              tickLine={false}
-              interval="preserveStartEnd"
-              minTickGap={8}
-              tick={{
-                fontSize: 12,
-                fill: theme.palette.text.secondary,
+            <CircularProgress size={30} />
+          </Box>
+        ) : error ? (
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              px: 2,
+            }}
+          >
+            <Typography
+              color="error"
+              variant="body2"
+              sx={{ textAlign: "center" }}
+            >
+              {error}
+            </Typography>
+          </Box>
+        ) : temperatureData.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={temperatureData}
+              margin={{
+                top: 8,
+                right: 8,
+                left: -9,
+                bottom: 0,
               }}
-              tickMargin={8}
-            />
+            >
+              <defs>
+                <linearGradient
+                  id="temperatureLineGradient"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="0"
+                >
+                  <stop offset="0%" stopColor="#27D3DC" />
+                  <stop offset="100%" stopColor="#7957FF" />
+                </linearGradient>
+              </defs>
 
-            <YAxis
-              domain={[0, 40]}
-              ticks={[10, 20, 30, 40]}
-              tickFormatter={(value: number) => `${value}°C`}
-              axisLine={false}
-              tickLine={false}
-              width={38}
-              tick={{
-                fontSize: 10,
-                fill: theme.palette.text.secondary,
-              }}
-            />
+              <CartesianGrid
+                stroke={theme.palette.divider}
+                strokeDasharray="3 3"
+                vertical={false}
+              />
 
-            <Tooltip
-              formatter={(value) => [
-                `${value}°C`,
-                "Temperature",
-              ]}
-              contentStyle={{
-                backgroundColor: theme.palette.background.paper,
-                color: theme.palette.text.primary,
-                border: `1px solid ${theme.palette.divider}`,
-                borderRadius: 8,
-                fontSize: 12,
-              }}
-              labelStyle={{
-                color: theme.palette.text.primary,
-              }}
-            />
+              <XAxis
+                dataKey="month"
+                axisLine={false}
+                tickLine={false}
+                tick={{
+                  fontSize: 11,
+                  fill: theme.palette.text.secondary,
+                }}
+                tickMargin={8}
+              />
 
-            <Line
-              type="linear"
-              dataKey="temperature"
-              stroke="url(#temperatureLineGradient)"
-              strokeWidth={2}
-              dot={false}
-              activeDot={{
-                r: 4,
-                fill: "#7957FF",
-                stroke: theme.palette.background.paper,
-                strokeWidth: 2,
-              }}
-              isAnimationActive={false}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+              <YAxis
+                domain={["auto", "auto"]}
+                tickFormatter={(value: number) => `${value}°`}
+                axisLine={false}
+                tickLine={false}
+                width={38}
+                tick={{
+                  fontSize: 10,
+                  fill: theme.palette.text.secondary,
+                }}
+              />
+
+              <Tooltip
+                formatter={(value) => [
+                  `${Number(value).toFixed(1)}°C`,
+                  isPersian ? "میانگین دما" : "Average Temperature",
+                ]}
+                contentStyle={{
+                  backgroundColor: theme.palette.background.paper,
+                  color: theme.palette.text.primary,
+                  border: `1px solid ${theme.palette.divider}`,
+                  borderRadius: 8,
+                  fontSize: 12,
+                }}
+              />
+
+              <Line
+                type="monotone"
+                dataKey="temperature"
+                stroke="url(#temperatureLineGradient)"
+                strokeWidth={2.5}
+                dot={{
+                  r: 4,
+                  fill: "#27D3DC",
+                  strokeWidth: 0,
+                }}
+                activeDot={{
+                  r: 5,
+                  fill: "#7957FF",
+                  stroke: theme.palette.background.paper,
+                  strokeWidth: 2,
+                }}
+                isAnimationActive
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <Box
+            sx={{
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Typography color="text.secondary">
+              {isPersian
+                ? "اطلاعات پیش‌بینی موجود نیست"
+                : "No forecast data available"}
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Paper>
   );
