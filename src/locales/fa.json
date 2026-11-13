@@ -89,5 +89,11 @@
   "chart": {
     "temperature": "دما",
     "time": "زمان"
+  },
+  "cities": {
+    "Tehran": "تهران",
+    "London": "لندن",
+    "San Francisco": "سن‌فرانسیسکو"
   }
+
 }

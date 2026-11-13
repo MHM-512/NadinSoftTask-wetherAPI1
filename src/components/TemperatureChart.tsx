@@ -105,7 +105,7 @@ export default function TemperatureChart({ lat, lon }: TemperatureChartProps) {
           })
           .filter((item): item is TemperatureData => item !== null);
 
-        // انتخاب پنج ماه آینده
+        
         const currentMonth = new Date();
         currentMonth.setDate(1);
         currentMonth.setHours(0, 0, 0, 0);

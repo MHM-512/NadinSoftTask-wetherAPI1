@@ -34,32 +34,85 @@ export default function DashboardContent({
   loading,
   error,
 }: DashboardContentProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  // Language
+  const isPersian = i18n.language.startsWith("fa");
+
+  const locale = isPersian ? "fa-IR" : "en-US";
+
+  // Translate City Name
+  const cityName = selectedCity
+    ? t(`cities.${selectedCity.name}`, {
+        defaultValue: selectedCity.name,
+      })
+    : isPersian
+      ? "انتخاب شهر"
+      : "Select a location";
 
   // Date and local time
   const dateTime: Date | null = currentWeather
     ? new Date((currentWeather.dt + currentWeather.timezone) * 1000)
     : null;
 
-  const locale = i18n.language.startsWith("fa") ? "fa-IR" : "en-US";
-
-  const isPersian = i18n.language.startsWith("fa");
-
-  return (
-    <>
-      {/* Loading */}
-      {loading && (
+  // Loading Screen
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "70vh",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          px: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             justifyContent: "center",
-            py: 2,
+            gap: 2.5,
+            p: 4,
+            minWidth: { xs: 220, sm: 260 },
+            borderRadius: 4,
+            bgcolor: "background.paper",
+            boxShadow: 2,
           }}
         >
-          <CircularProgress />
-        </Box>
-      )}
+          <CircularProgress
+            size={60}
+            thickness={4}
+            sx={{
+              color: "primary.main",
+            }}
+          />
 
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{
+              fontWeight: 500,
+              textAlign: "center",
+            }}
+          >
+            {isPersian
+              ? "در حال دریافت اطلاعات آب‌وهوا..."
+              : "Loading weather data..."}
+          </Typography>
+
+          <Typography variant="caption" color="text.disabled">
+            {isPersian ? "لطفاً چند لحظه صبر کنید" : "Please wait a moment"}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <>
       {/* Error Message */}
       {error && (
         <Alert severity="error" sx={{ mx: 2, mb: 2 }}>
@@ -113,13 +166,7 @@ export default function DashboardContent({
           >
             <RoomIcon fontSize="small" />
 
-            <Typography variant="body2">
-              {selectedCity
-                ? selectedCity.name
-                : isPersian
-                  ? "انتخاب شهر"
-                  : "Select a location"}
-            </Typography>
+            <Typography variant="body2">{cityName}</Typography>
           </Box>
 
           {/* Day and Weather Icon */}

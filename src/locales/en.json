@@ -90,5 +90,10 @@
   "chart": {
     "temperature": "Temperature",
     "time": "Time"
+  },
+  "cities": {
+    "Tehran": "Tehran",
+    "London": "London",
+    "San Francisco": "San Francisco"
   }
 }
